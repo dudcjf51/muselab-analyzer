@@ -343,26 +343,41 @@
     var pages = [];
     var summary = [sz && sz.name, bt && bt.name, sl && sl.name, fs && fs.name].filter(Boolean).join(' · ');
     pages.push('<section class="page cover"><div class="brand">MUSE.LAB</div><div class="title">Personal<br>Style Book</div><div class="name">' + esc(name) + ' 님</div><p>' + esc(summary) + '</p><p style="color:var(--sub)">' + date + '</p>' + foot + '</section>');
+    function rowsHtml(rows) {
+      if (!rows || !rows.length) return '';
+      return '<div class="kv">' + rows.map(function (r) {
+        var v = r[1]; if (v && typeof v === 'object') v = v[g] || v.f || '';
+        return v ? '<b>' + esc(r[0]) + '</b><span>' + esc(v) + '</span>' : '';
+      }).join('') + '</div>';
+    }
+    function swatch(list) { return '<div class="book-sw">' + list.map(function (c) { return '<div><i style="background:' + c[1] + '"></i>' + esc(c[0]) + '</div>'; }).join('') + '</div>'; }
     if (sz) {
       var f = R.face && R.face.ok ? R.face : null;
-      pages.push('<section class="page"><h2>퍼스널컬러 · ' + esc(sz.name) + '</h2><p><b>' + esc(sz.axis) + '</b></p><p>' + esc(sz.desc) + '</p>' +
-        '<h3>나에게 어울리는 컬러</h3><div class="book-sw">' + sz.palette.map(function (c) { return '<div><i style="background:' + c[1] + '"></i>' + esc(c[0]) + '</div>'; }).join('') + '</div>' +
-        '<div class="kv"><b>옷</b><span>' + esc(sz.cloth) + '</span><b>메이크업·헤어</b><span>' + esc(sz.makeup) + '</span><b>조금 어려운 컬러</b><span>' + esc(sz.avoid) + '</span></div>' +
+      pages.push('<section class="page"><h2>퍼스널컬러 · ' + esc(sz.name) + '</h2><p><b>' + esc(sz.axis) + '</b>' + (sz.sub ? ' <span style="color:var(--sub)">(' + esc(sz.sub) + ')</span>' : '') + '</p><p>' + esc(sz.desc) + '</p>' +
+        '<h3>베스트 컬러</h3>' + swatch(sz.palette) +
+        (sz.base ? '<h3>기본 옷장 컬러</h3>' + swatch(sz.base) : '') +
+        '<h3>옷 · 코디</h3>' + rowsHtml(sz.style) + foot + '</section>');
+      pages.push('<section class="page"><h2>퍼스널컬러 · 뷰티 &amp; 액세서리</h2>' + rowsHtml(sz.beauty) +
         (f ? '<h3>측정한 나의 색</h3><div class="sw"><span><i style="background:' + hex(f.skin) + '"></i>피부</span><span><i style="background:' + hex(f.eye) + '"></i>눈동자</span>' + (f.hair ? '<span><i style="background:' + hex(f.hair) + '"></i>머리카락</span>' : '') + '</div>' : '') +
         (inc && S.face ? '<img class="book-photo" src="' + S.face.toDataURL('image/jpeg', 0.85) + '" alt="고객 얼굴 사진">' : '') + foot + '</section>');
     }
-    if (bt || sl) {
-      var b = R.body && R.body.ok ? R.body : null;
-      pages.push('<section class="page"><h2>골격 · 체형</h2>' +
-        (bt ? '<h3>골격 · ' + esc(bt.name) + ' <span style="font-weight:400">' + bt.en + '</span></h3><p>' + esc(bt.desc[g]) + '</p><div class="kv"><b>어울리는 핏</b><span>' + esc(bt.fit[g]) + '</span><b>소재</b><span>' + esc(bt.fabric[g]) + '</span><b>스타일링 팁</b><span>' + esc(bt.tip[g]) + '</span></div>' : '') +
-        (sl ? '<h3>실루엣 · ' + esc(sl.name) + '</h3><p>' + esc(sl.desc) + '</p>' + (b ? '<div class="kv"><b>어깨 : 허리 : 골반</b><span>' + Math.round(b.S / b.H * 100) + ' : ' + Math.round(b.W / b.H * 100) + ' : 100</span></div>' : '') + '<div class="kv"><b>스타일링 팁</b><span>' + esc(sl.tip) + '</span></div>' : '') +
+    var b = R.body && R.body.ok ? R.body : null;
+    if (bt) {
+      pages.push('<section class="page"><h2>골격 · ' + esc(bt.name) + ' <span style="font-weight:400;font-size:16px">' + bt.en + '</span></h2><p>' + esc(bt.desc[g]) + '</p>' + rowsHtml(bt.rows) + foot + '</section>');
+    }
+    if (sl) {
+      pages.push('<section class="page"><h2>체형 실루엣 · ' + esc(sl.name) + '</h2><p>' + esc(sl.desc) + '</p>' +
+        (b ? '<div class="kv"><b>어깨 : 허리 : 골반</b><span>' + Math.round(b.S / b.H * 100) + ' : ' + Math.round(b.W / b.H * 100) + ' : 100 (골반 기준)</span></div>' : '') +
+        rowsHtml(sl.rows) +
         (inc && S.body ? '<img class="book-photo" src="' + S.body.toDataURL('image/jpeg', 0.85) + '" alt="고객 전신 사진">' : '') + foot + '</section>');
     }
-    if (fs || comment) {
-      pages.push('<section class="page">' + (fs ? '<h2>얼굴 · ' + esc(fs.name) + '</h2><p>' + esc(fs.desc) + '</p>' +
+    if (fs) {
+      pages.push('<section class="page"><h2>얼굴형 · ' + esc(fs.name) + '</h2><p>' + esc(fs.desc) + '</p>' +
         (R.face && R.face.ok ? '<div class="kv"><b>얼굴 비율</b><span>상안부 ' + pct(R.face.ratio[0]) + ' : 중안부 ' + pct(R.face.ratio[1]) + ' : 하안부 ' + pct(R.face.ratio[2]) + '</span></div>' : '') +
-        '<div class="kv"><b>스타일링 팁</b><span>' + esc(fs.tip) + '</span></div>' : '') +
-        (comment ? '<h2 style="margin-top:12px">컨설턴트 코멘트</h2><p style="white-space:pre-line">' + esc(comment) + '</p>' : '') + foot + '</section>');
+        rowsHtml(fs.rows) + foot + '</section>');
+    }
+    if (comment) {
+      pages.push('<section class="page"><h2>컨설턴트 코멘트</h2><p style="white-space:pre-line">' + esc(comment) + '</p>' + foot + '</section>');
     }
     return pages.join('');
   }
