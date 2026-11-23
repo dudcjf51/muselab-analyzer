@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Muse.lab 스타일 분석</title>
+<style>
+:root{--bg:#F7F3EF;--card:#FFFFFF;--ink:#2A2421;--sub:#5A4C44;--accent:#6B5345;--line:#E4DBD3;--soft:#EFE7E0;--warn:#A33A2B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;word-break:keep-all;overflow-wrap:break-word;line-height:1.6}
+header.app{background:var(--ink);color:var(--bg);padding:16px 24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+header.app h1{margin:0;font-size:20px;font-weight:700;letter-spacing:.02em}
+header.app small{color:#CDBBAE}
+main{max-width:1080px;margin:0 auto;padding:24px 20px 80px;display:flex;flex-direction:column;gap:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px}
+.card h2{margin:0 0 4px;font-size:20px}
+.card .lead{margin:0 0 16px;color:var(--sub);font-size:15px}
+.step{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:14px;font-weight:700;margin-right:8px}
+.row{display:flex;flex-wrap:wrap;gap:16px}
+.field{display:flex;flex-direction:column;gap:6px;flex:1 1 220px}
+label.t{font-weight:700;font-size:15px}
+input[type=text],textarea,select{font:inherit;font-size:16px;padding:12px 14px;border:1px solid #CDBBAE;border-radius:12px;background:var(--bg);color:var(--ink);min-height:48px;width:100%}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--line);border-radius:999px;background:var(--bg);cursor:pointer;min-height:44px;font-size:15px}
+.pill input{width:18px;height:18px}
+.check{display:flex;align-items:flex-start;gap:10px;font-size:15px;min-height:44px;cursor:pointer}
+.check input{width:22px;height:22px;margin-top:2px;flex:none}
+.btn{font:inherit;font-size:16px;font-weight:700;border:none;border-radius:999px;padding:14px 26px;min-height:48px;cursor:pointer;background:var(--ink);color:var(--bg)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn.small{font-size:14px;padding:8px 16px;min-height:40px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.slot{border:2px dashed #CDBBAE;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.slot h3{margin:0;font-size:17px}
+.slot p{margin:0;font-size:14px;color:var(--sub)}
+.slot canvas{width:100%;height:auto;border-radius:12px;background:#ddd;display:none}
+.slot .actions{display:flex;flex-wrap:wrap;gap:8px}
+.filebtn{position:relative;overflow:hidden;display:inline-flex}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.q{border-top:1px solid var(--line);padding:14px 0}
+.q:first-of-type{border-top:none}
+.q .qt{font-weight:700;margin-bottom:8px}
+.notice{background:var(--soft);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--sub)}
+.notice.warn{background:#F8E5E1;color:var(--warn)}
+.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.res{border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.res h3{margin:0;font-size:17px;color:var(--accent);letter-spacing:.04em}
+.res .big{font-size:24px;font-weight:700}
+.res .meta{font-size:13px;color:var(--sub)}
+.sw{display:flex;flex-wrap:wrap;gap:8px}
+.sw span{display:inline-flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--sub)}
+.sw i{width:44px;height:44px;border-radius:10px;border:1px solid rgba(0,0,0,.12);display:block}
+table.m{width:100%;border-collapse:collapse;font-size:14px}
+table.m td{padding:4px 0;border-bottom:1px solid var(--line)}
+table.m td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+#busy{position:fixed;inset:0;background:rgba(42,36,33,.6);display:none;align-items:center;justify-content:center;z-index:50;color:#fff;font-size:18px;font-weight:700;text-align:center;padding:24px}
+.hidden{display:none !important}
+/* ---------- 스타일북 ---------- */
+#book{display:none}
+.page{width:210mm;min-height:297mm;padding:18mm 16mm;background:#fff;color:var(--ink);margin:0 auto 16px;box-shadow:0 2px 12px rgba(0,0,0,.08);page-break-after:always;break-after:page;display:flex;flex-direction:column;gap:14px}
+.page:last-child{page-break-after:auto;break-after:auto}
+.page h2{font-size:22px;margin:0;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.page h3{font-size:16px;margin:8px 0 0;color:var(--accent)}
+.page p{margin:0;font-size:13.5px}
+.cover{justify-content:center;align-items:flex-start;gap:18px;background:var(--bg)}
+.cover .brand{font-size:15px;letter-spacing:.3em;color:var(--accent)}
+.cover .title{font-size:40px;font-weight:700;line-height:1.2}
+.cover .name{font-size:22px}
+.book-sw{display:grid;grid-template-columns:repeat(8,1fr);gap:8px}
+.book-sw div{display:flex;flex-direction:column;gap:4px;font-size:12px}
+.book-sw i{display:block;aspect-ratio:1/1;border-radius:10px;border:1px solid rgba(0,0,0,.12)}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;font-size:13.5px}
+.kv b{color:var(--sub);font-weight:700}
+.book-photo{max-height:75mm;max-width:100%;border-radius:8px;object-fit:contain;align-self:flex-start}
+.foot{margin-top:auto;font-size:11px;color:var(--sub)}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  header.app,main,#busy{display:none !important}
+  #book{display:block !important}
+  .page{box-shadow:none;margin:0}
+}
+</style>
+</head>
+<body>
+<header class="app">
+  <h1>muse.lab · 스타일 분석</h1>
+  <small>사진은 이 기기 밖으로 전송되지 않아요 · 분석은 브라우저 안에서만 이뤄집니다</small>
+</header>
+
+<main>
+  <section class="card">
+    <h2><span class="step">1</span>고객 정보와 동의</h2>
+    <p class="lead">촬영 전 동의서 서명을 받은 뒤 진행해 주세요.</p>
+    <div class="row">
+      <div class="field"><label class="t" for="cName">고객 이름(스타일북 표시용)</label><input id="cName" type="text" maxlength="30" placeholder="예: 김뮤즈"></div>
+      <div class="field"><span class="t">스타일 기준</span>
+        <div class="pills" role="radiogroup" aria-label="스타일 기준">
+          <label class="pill"><input type="radio" name="gender" value="f" checked>여성</label>
+          <label class="pill"><input type="radio" name="gender" value="m">남성</label>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:4px">
+      <label class="check"><input type="checkbox" id="consent1">촬영 및 개인정보 수집·이용 동의서에 서명을 받았습니다 (필수)</label>
+      <label class="check"><input type="checkbox" id="consent2">사진은 분석 후 동의서에 적은 기간 안에 삭제함을 안내했습니다 (필수)</label>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">2</span>사진</h2>
+    <p class="lead">무채색 배경, 주광색 조명(5000~5500K)에서 찍어 주세요. 화면 구석에 흰 종이를 두면 색 보정을 할 수 있어요.</p>
+    <div class="photos">
+      <div class="slot" id="slotFace">
+        <h3>얼굴 정면</h3>
+        <p>머리를 넘기고 화장을 최소로, 흰 케이프나 흰 옷을 입고 정면을 봐 주세요. (퍼스널컬러·얼굴 분석)</p>
+        <div class="actions">
+          <span class="filebtn btn small ghost">사진 찍기/불러오기<input type="file" accept="image/*" capture="user" id="fileFace"></span>
+          <button type="button" class="btn small ghost" id="wbBtn" disabled>흰색 기준 찍기</button>
+        </div>
+        <p id="wbInfo">색 보정: 사용 안 함</p>
+        <canvas id="cvFace"></canvas>
+      </div>
+      <div class="slot" id="slotBody">
+        <h3>전신 정면</h3>
+        <p>몸에 맞는 무지 상의와 일자 바지, 발을 어깨너비로 벌리고 팔은 몸에서 살짝 떨어뜨려 주세요. (체형 분석)</p>
+        <div class="actions">
+          <span class="filebtn btn small ghost">사진 찍기/불러오기<input type="file" accept="image/*" capture="environment" id="fileBody"></span>
+        </div>
+        <canvas id="cvBody"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">3</span>골격·톤 체크 질문</h2>
+    <p class="lead">사진만으로 알기 어려운 골격 질감과 피부 톤을 질문으로 보완해요. 고객과 함께 답해 주세요.</p>
+    <div id="boneQs"></div>
+    <h3 style="margin:18px 0 0;font-size:16px">피부 톤 보완 질문</h3>
+    <div id="colorQs"></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">4</span>분석</h2>
+    <p class="lead" id="readyMsg">동의 체크와 사진 두 장이 있으면 분석할 수 있어요. 골격 질문만 답해도 골격 결과는 나와요.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px">
+      <button type="button" class="btn" id="runBtn" disabled>분석하기</button>
+      <button type="button" class="btn ghost" id="resetBtn">새 고객 시작</button>
+    </div>
+  </section>
+
+  <section class="card hidden" id="resultCard">
+    <h2><span class="step">5</span>분석 결과와 컨설턴트 확정</h2>
+    <p class="lead">아래 결과는 측정값 기반의 1차 참고 결과예요. 실물과 드레이프로 확인한 뒤 최종 유형을 골라 주세요.</p>
+    <div class="results" id="results"></div>
+    <div class="field" style="margin-top:16px"><label class="t" for="comment">컨설턴트 코멘트 (스타일북에 들어가요)</label><textarea id="comment" rows="4" maxlength="800" placeholder="예: 웜톤이지만 밝기가 높아 코랄·피치 계열이 가장 화사했어요."></textarea></div>
+    <label class="check" style="margin-top:8px"><input type="checkbox" id="incPhoto">스타일북에 고객 사진 넣기 (고객이 원할 때만)</label>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px">
+      <button type="button" class="btn" id="bookBtn">스타일북 미리보기 · PDF 저장</button>
+    </div>
+  </section>
+
+  <section class="card hidden" id="previewCard">
+    <h2>스타일북 미리보기</h2>
+    <p class="lead">인쇄 창에서 '대상: PDF로 저장', 용지 A4, 배경 그래픽 켜기를 선택하세요.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+      <button type="button" class="btn" id="printBtn">PDF로 저장 / 인쇄</button>
+    </div>
+    <div id="previewHost" style="overflow:auto;background:var(--soft);padding:16px;border-radius:12px"></div>
+  </section>
+</main>
+
+<div id="book"></div>
+<div id="busy" role="status" aria-live="polite">분석 중…</div>
+
+<script src="vendor/face_mesh/face_mesh.js"></script>
+<script src="vendor/pose/pose.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
